@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import type { NextRequest as NextRequestType } from "next/server";
 import { getToken } from "next-auth/jwt";
 export { default } from "next-auth/middleware";
@@ -14,11 +14,11 @@ export async function middleware(request: NextRequestType) {
       url.pathname.startsWith("/signup") ||
       url.pathname.startsWith("/verify") ||
       url.pathname.startsWith("/"))
-  ) {
+  )
     return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
 
-  return NextResponse.redirect(new URL("/home", request.url));
+  if (!token && url.pathname.startsWith("/dashboard"))
+    return NextResponse.redirect(new URL("/signin", request.url));
 }
 
 // See "Matching Paths" below to learn more
