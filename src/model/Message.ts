@@ -5,7 +5,7 @@ export interface Message extends Document {
   createdAt: Date;
 }
 
-const MessageSchema: Schema<Message> = new Schema({
+export const MessageSchema: Schema<Message> = new Schema({
   content: {
     type: String,
     required: true,
@@ -13,5 +13,6 @@ const MessageSchema: Schema<Message> = new Schema({
   createdAt: {
     type: Date,
     required: true,
+    default: Date.now,
   },
 });
