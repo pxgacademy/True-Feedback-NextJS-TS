@@ -7,4 +7,4 @@ END IF
 ELSE
     // Create a new user with the provided details
     // Save the new user
-END IF 
+END IF
