@@ -40,6 +40,8 @@ export async function GET() {
       },
       { status: 200 }
     );
+
+    // eslint-disable-next-line
   } catch (error: any) {
     console.log("Error getting messages: ", error);
     return Response.json(
