@@ -5,7 +5,8 @@ import UserModel from "@/model/User";
 import { User } from "next-auth";
 import mongoose from "mongoose";
 
-export async function GET(request: Request) {
+// TODO: add it if needed. GET(request: Request)
+export async function GET() {
   await dbConnect();
 
   const session = await getServerSession(authOptions);
@@ -25,5 +26,25 @@ export async function GET(request: Request) {
       { $sort: { "messages.createdAt": -1 } },
       { $group: { _id: "$_id", messages: { $push: "$messages" } } },
     ]);
-  } catch (error) {}
+
+    if (!user || user?.length === 0)
+      return Response.json(
+        { success: false, message: "User not found" },
+        { status: 401 }
+      );
+    return Response.json(
+      {
+        success: true,
+        message: "Got the messages",
+        messages: user[0].messages,
+      },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.log("Error getting messages: ", error);
+    return Response.json(
+      { success: false, message: error?.message },
+      { status: 500 }
+    );
+  }
 }
