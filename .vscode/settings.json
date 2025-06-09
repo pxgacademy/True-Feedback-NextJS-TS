@@ -1,5 +1,8 @@
 {
-  "cSpell.ignoreWords": ["NEXTAUTH"],
+  "cSpell.ignoreWords": [
+    "NEXTAUTH",
+    "sonner"
+  ],
   "todo-tree.highlights.useColourScheme": true,
   "todo-tree.highlights.customHighlight": {
     "TODO": {
