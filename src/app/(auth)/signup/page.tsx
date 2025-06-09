@@ -33,7 +33,7 @@ const Page = () => {
   const [isCheckingUsername, setIsCheckingUsername] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const debounced = useDebounceCallback(setUsername, 500);
-  const router = useRouter();
+  const { replace: redirect } = useRouter();
 
   // zod implementation
   const form = useForm<SignUpFormValues>({
@@ -79,7 +79,7 @@ const Page = () => {
         description: res.message,
       });
 
-      router.replace(`/verify/${username}`);
+      redirect(`/verify/${username}`);
 
       //
     } catch (error) {
@@ -161,7 +161,7 @@ const Page = () => {
               )}
             />
 
-            {/* Email */}
+            {/* Password */}
             <FormField
               name="password"
               control={form.control}
@@ -179,7 +179,7 @@ const Page = () => {
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
-                  <Loader2 className="mr-2 w-4 animate-spin" /> Please wait...
+                  <Loader2 className="mr-2 w-4 animate-spin" /> Signing up...
                 </>
               ) : (
                 "Signup"
