@@ -56,6 +56,32 @@ const Page = () => {
     //
   }, [debouncedUsername]);
 
+  const onSubmit = async (data: SignUpFormValues) => {
+    setIsSubmitting(true);
+
+    try {
+      const { data: res } = await axios.post<ApiResponse>("/api/signup", data);
+      toast("Success", {
+        description: res.message,
+      });
+
+      router.replace(`/verify/${username}`);
+
+      //
+    } catch (error) {
+      console.log("Error is signin of user: ", error);
+      const axiosError = error as AxiosError<ApiResponse>;
+      const errorMessage = axiosError.response?.data.message;
+      toast.error("Error", {
+        description: errorMessage,
+      });
+
+      //
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return <div>page</div>;
 };
 
