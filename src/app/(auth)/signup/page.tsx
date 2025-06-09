@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { useDebounceValue } from "usehooks-ts";
+import { useDebounceCallback } from "usehooks-ts";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { SignUpSchema } from "@/schemas/signUpSchema";
@@ -31,7 +31,7 @@ const Page = () => {
   const [usernameMessage, setUsernameMessage] = useState<string>("");
   const [isCheckingUsername, setIsCheckingUsername] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const debouncedUsername = useDebounceValue(username, 300);
+  const debounced = useDebounceCallback(setUsername, 300);
   const router = useRouter();
 
   // zod implementation
@@ -46,14 +46,14 @@ const Page = () => {
 
   useEffect(() => {
     (async () => {
-      if (!debouncedUsername) return;
+      if (!username) return;
 
       setIsCheckingUsername(true);
       setUsernameMessage("");
 
       try {
         const { data: res } = await axios.get(
-          `/api/check-username-unique?username=${debouncedUsername}`
+          `/api/check-username-unique?username=${username}`
         );
         setUsernameMessage(res.message);
       } catch (error) {
@@ -67,7 +67,7 @@ const Page = () => {
     })();
 
     //
-  }, [debouncedUsername]);
+  }, [username]);
 
   const onSubmit = async (data: SignUpFormValues) => {
     setIsSubmitting(true);
@@ -96,8 +96,8 @@ const Page = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div className="w-full max-w-md space-y-8 bg-white rounded-lg shadow-md">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-md space-y-8 bg-white rounded-lg shadow-md p-8">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
             Join Mystery Message
@@ -120,10 +120,17 @@ const Page = () => {
                       {...field}
                       onChange={(e) => {
                         field.onChange(e);
-                        setUsername(e.target.value);
+                        debounced(e.target.value);
                       }}
                     />
                   </FormControl>
+                  {isCheckingUsername && (
+                    <Loader2
+                      className="
+                        animate-spin
+                        "
+                    />
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
