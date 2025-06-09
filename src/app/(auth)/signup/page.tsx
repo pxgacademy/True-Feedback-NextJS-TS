@@ -28,10 +28,11 @@ type SignUpFormValues = z.infer<typeof SignUpSchema>;
 
 const Page = () => {
   const [username, setUsername] = useState<string>("");
+  // TODO: make it object
   const [usernameMessage, setUsernameMessage] = useState<string>("");
   const [isCheckingUsername, setIsCheckingUsername] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const debounced = useDebounceCallback(setUsername, 300);
+  const debounced = useDebounceCallback(setUsername, 500);
   const router = useRouter();
 
   // zod implementation
@@ -131,6 +132,15 @@ const Page = () => {
                         "
                     />
                   )}
+                  <p
+                    className={`text-sm ${
+                      usernameMessage === "username is available"
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {usernameMessage}
+                  </p>
                   <FormMessage />
                 </FormItem>
               )}
